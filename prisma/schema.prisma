@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TransactionType {
+  addition
+  reduction
+}
+
+enum UserRole {
+  admin
+  user
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  role      UserRole @default(admin)
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Product {
+  id               String             @id @default(uuid())
+  name             String
+  description      String
+  quantity         Int
+  price            Float
+  supplierInfo     String?            @map("supplier_info")
+  threshold        Int
+  category         Category           @relation(fields: [categoryId], references: [id])
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+  categoryId       String             @map("category_id")
+  stockTransaction StockTransaction[]
+
+  @@map("products")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique()
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
+
+model StockTransaction {
+  id              String          @id @default(uuid())
+  product         Product         @relation(fields: [productId], references: [id])
+  quantityChange  Int             @map("quantity_change")
+  transactionType TransactionType @map("transaction_type")
+  transactionDate DateTime        @map("transaction_date")
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @updatedAt @map("updated_at")
+  productId       String          @map("product_id")
+
+  @@map("stock_transactions")
+}
