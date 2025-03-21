@@ -34,8 +34,8 @@ Ensure the following are installed:
 1. **Clone the Repository:**
 
 ```bash
-git clone https://github.com/your-repo/inventory-management.git
-cd inventory-management
+git clone https://github.com/raj-rangani/pmc-programming-test-round.git
+cd pmc-programming-test-round
 ```
 
 2. **Install Dependencies:**
